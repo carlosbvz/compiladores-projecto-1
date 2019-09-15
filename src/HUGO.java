@@ -1,14 +1,17 @@
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
+import compiler.HugoCompiler;
 
 public class HUGO {
 
-    private static String fileName = "cuadrado.hugo";
+    private static String fileName;
+    private static HugoCompiler hugoCompiler = new HugoCompiler();
     public static void main(String[] args) throws Exception {
-        System.out.println("I am HUGO");
-        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
-            stream.forEach(System.out::println);
+        if (args.length == 0) {
+            System.out.println("Por favor provea el path del archivo de entrada");
+            System.exit(0);
+        } else {
+            fileName = args[0];
+            hugoCompiler.compile(fileName);
+
         }
     }
 }
