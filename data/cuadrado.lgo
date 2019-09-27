@@ -1,6 +1,216 @@
-; Primer ejemplo en HUGO
-PARA Cuadrado
-BP
-MT
-REPITE 4 [ AV 100 GD 90 OT
-FIN
+para aaa
+;
+; Función:
+;
+; Reloj gráfico sencillo que indica la hora actual.
+;
+; para ejecutar:
+;
+; carga "reloj.lgo
+; llamar a RELOJ
+;
+; Ejemplo:
+;
+reloj
+;
+fin
+
+para actualizar
+haz "tiempo conseguirtiempo
+haz "nhoras primero :tiempo
+haz "tiempo menosprimero :tiempo
+haz "nmin primero :tiempo
+haz "tiempo menosprimero :tiempo
+haz "nseg primero :tiempo
+agujatiemposeg :seg
+si no iguales? :min :nmin~
+[~
+agujatiempomin :min ~
+si no iguales? :horas :nhoras~
+[~
+agujatiempohoras :horas ~
+agujatiempohoras :nhoras ~
+]~
+agujatiempomin :nmin ~
+]
+agujatiemposeg :nseg
+haz "horas :nhoras
+haz "min :nmin
+haz "seg :nseg
+fin
+
+para agujatiempohoras :horas
+inversolapiz
+pongrosor [5 5]
+ponrumbo :horas*30
+bajalapiz
+avanza 50
+subelapiz
+retrocede 50
+fin
+
+para agujatiempomin :min
+inversolapiz
+pongrosor [2 2]
+ponrumbo :min*6
+bajalapiz
+avanza 100
+subelapiz
+retrocede 100
+fin
+
+para agujatiemposeg :seg
+inversolapiz
+pongrosor [1 1]
+ponrumbo :seg*6
+bajalapiz
+avanza 100
+subelapiz
+retrocede 100
+fin
+
+para BorrarVentana
+borraventana "TIPOCONTROL
+fin
+
+para CargarSimulador
+;Procedimiento que da de alta un nuevo simulador y procede a la carga del mismo
+;Se pide al usuario que introduzca el nombre del simulador y se almacena en el fichero
+;que contiene el nombre de los simuladores SIMULADORES.txt
+;DESTACAR QUE EL NOMBRE DEL SIMULADOR DEBE COINCIDIR CON EL
+;NOMBRE DEL ARCHIVO CON EXTENSIÓN .LGO PRINCIPAL DEL SIMULADOR
+;A CARGAR
+HAZ "simul PRIMERO preguntabox [Dar de alta un simulador] [Introduzca el nombre del simulador:]
+;Se almacena en el fichero de los nombres de simuladores el nuevo nombre del simulador a dar de alta
+abreañadir "ENTORNO/SIMULADORES/SIMULADORES.txt
+ponescritura "ENTORNO/SIMULADORES/SIMULADORES.txt
+ESCRIBE :simul
+ponescritura []
+cierra "ENTORNO/SIMULADORES/SIMULADORES.txt
+;Se solicita al usuario la ruta donde está el fichero del simulador que se va a dar de alta
+HAZ "ruta preguntabox [Dar de alta un simulador] [Introduzca la ruta del simulador:]
+;En :rutaSimulador se guarda la ruta en la que se quiere copiar el simulador (donde está
+;instalado MSWLogo)
+HAZ "rutaSimulador (PALABRA :rutaMSWLogo "/ENTORNO/SIMULADORES/ :simul)
+;Se copia el directorio del simulador a dar de alta en la carpeta correspondiente al nuevo simulador
+;donde se tenga instalado MSWLogo
+COPIADIRECTORIO :ruta :rutaSimulador
+CAMBIADIRECTORIO :rutaSimulador
+BT
+HAZ "FichSimul PALABRA :simul ".LGO
+CARGA :FichSimul
+;Se retorna al directorio donde se ha instalado el compilador de MSWLogo
+CAMBIADIRECTORIO :rutaMSWLogo
+BT
+fin
+
+para conseguirtiempo
+haz "tiempo hora
+haz "tiempo menosprimero :tiempo
+haz "tiempo menosprimero :tiempo
+haz "tiempo menosprimero :tiempo
+haz "tiempo primero :tiempo
+haz "tiempo analiza mezcla "oo :tiempo
+devuelve :tiempo
+fin
+
+para cuadro
+av 100
+fin
+
+para dibujareloj
+ponrumbo 30
+subelapiz
+repite 12 ~
+[~
+avanza 120 ~
+ponx coorx-12 ~
+pony coory+12 ~
+haz "sh rumbo
+ponrumbo 90
+rotula cuentarepite ~
+ponrumbo :sh
+ponx coorx+12 ~
+pony coory-12 ~
+retrocede 120 ~
+giraderecha 30 ~
+]
+fin
+
+para EleccionControladora
+;******** VENTANA DE ELECCION DEL TIPO DE CONTROLADORA ********
+BT 	;borra pantalla de texto
+BP 	;borra pantalla de gráficos
+ocultatortuga
+creaventana "principal "TIPOCONTROL [Elección de controladora] 120 150 287 100 []
+creagroupbox "TIPOCONTROL "E_Ventana 5 0 274 85
+creagroupbox "TIPOCONTROL "E_CNICE 20 2 120 50
+creaboton "TIPOCONTROL "CNICE [ CNICE] 25 10 110 35 [BorrarVentana carga "ENTORNO/PRIMITIVAS/CNICE/Elecc_EntornoCNICE.LGO]
+creaestatico "TIPOCONTROL "investronica [(compatible con Investrónica)] 32 31 100 10
+creagroupbox "TIPOCONTROL "E_ENCONOR 145 2 120 50
+creaboton "TIPOCONTROL "ENCONOR [ENCONOR PLUS] 150 10 110 35 [BorrarVentana carga "ENTORNO/PRIMITIVAS/ENCONOR/Elecc_EntornoENCONOR.LGO]
+creaboton "TIPOCONTROL "Cancelar [CANCELAR] 105 60 75 20 [BT BP muestratortuga BorrarVentana]
+fin
+
+para EleccionSimulador
+;******** VENTANA DE ELECCION DEL SIMULADOR ********
+;Se leen los nombres de los simuladores del archivo SIMULADORES.txt y se encolan en la variable :simuladores
+SI ficherop "ENTORNO/SIMULADORES/SIMULADORES.txt [abrelectura "ENTORNO/SIMULADORES/SIMULADORES.txt
+ponlectura "ENTORNO/SIMULADORES/SIMULADORES.txt
+HAZ "simuladores []
+HAZ "cont 0
+mientras [NO finlec?] [HAZ "cont :cont+1 COLA "simuladores leelista]
+ponlectura []
+cierra "ENTORNO/SIMULADORES/SIMULADORES.txt
+]
+HAZ "seleccion3 seleccionbox [Elija un simulador] :simuladores
+DESDE [i 1 :cont] [HAZ "simulador PRIMERO DECOLA "simuladores
+;Se ve la selección que ha realizado el usuario y se procede a la carga del simulador correspondiente
+SI :seleccion3 = :i [HAZ "rutSimul (PALABRA "ENTORNO/SIMULADORES/ :simulador "/ :simulador ".LGO)
+carga :rutSimul
+]
+]
+fin
+
+para EleccionTrabSimuladores
+;Ventana para elegir trabajar con simuladores o cargar un simulador propio
+;La variable rutaMSWLogo almacena la ruta donde se ha instalado el compilador de MSWLogo
+HAZ "rutaMSWLogo DIRECTORIOACTUAL
+BT
+hazlocal "seleccion2 seleccionbox [Trabajar con simuladores] [[Usar un simulador] [Dar de alta un simulador]]
+si :seleccion2 = 1 [EleccionSimulador]
+si :seleccion2 = 2 [CargarSimulador]
+fin
+
+para Empezar
+;************* VENTANA INICIAL ************
+;Ventana para elección de controladora, simuladores o programar con MSWLogo
+tapa [[EleccionControladora EleccionTrabSimuladores CopiarFichero CargarSimulador EleccionSimulador Empezar BorrarVentana] [arranque simuladores simulador seleccion seleccion3 rutamswlogo rutsimul cont FichSimul ruta rutaSimulador simul] []]
+haz "seleccion seleccionbox [Elija la opción de trabajo] [[Usar una controladora] [Simuladores] [Programar]]
+si :seleccion = 1 [EleccionControladora]
+si :seleccion = 2 [EleccionTrabSimuladores]
+si :seleccion = 3 []
+fin
+
+para oo :a
+sisino iguales? ": :a [devuelve caracter 32] [devuelve :a]
+fin
+
+para reloj
+borrapantalla
+ocultatortuga
+dibujareloj
+haz "seg 0
+haz "min 0
+haz "horas 0
+agujatiempohoras :horas
+agujatiempomin :min
+agujatiemposeg :seg
+poncontador 1 1000 [actualizar]
+fin
+
+para zzz
+sisino sinobox [Bienvenido] [Seleccione SI para ver el ejemplo. Seleccione NO para ver el código.] [aaa] [editatodo]
+fin
+
+Haz "arranque [zzz]

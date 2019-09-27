@@ -1,6 +1,216 @@
-001 ; Primer ejemplo en HUGO
-002 PARA Cuadrado
-003 BP
-004 MT
-005 REPITE 4 [ AV 100 GD 90 OT
-006 FIN
+001 para aaa
+002 ;
+003 ; Función:
+004 ;
+005 ; Reloj gráfico sencillo que indica la hora actual.
+006 ;
+007 ; para ejecutar:
+008 ;
+009 ; carga "reloj.lgo
+010 ; llamar a RELOJ
+011 ;
+012 ; Ejemplo:
+013 ;
+014 reloj
+015 ;
+016 fin
+017 
+018 para actualizar
+019 haz "tiempo conseguirtiempo
+020 haz "nhoras primero :tiempo
+021 haz "tiempo menosprimero :tiempo
+022 haz "nmin primero :tiempo
+023 haz "tiempo menosprimero :tiempo
+024 haz "nseg primero :tiempo
+025 agujatiemposeg :seg
+026 si no iguales? :min :nmin~
+027 [~
+028 agujatiempomin :min ~
+029 si no iguales? :horas :nhoras~
+030 [~
+031 agujatiempohoras :horas ~
+032 agujatiempohoras :nhoras ~
+033 ]~
+034 agujatiempomin :nmin ~
+035 ]
+036 agujatiemposeg :nseg
+037 haz "horas :nhoras
+038 haz "min :nmin
+039 haz "seg :nseg
+040 fin
+041 
+042 para agujatiempohoras :horas
+043 inversolapiz
+044 pongrosor [5 5]
+045 ponrumbo :horas*30
+046 bajalapiz
+047 avanza 50
+048 subelapiz
+049 retrocede 50
+050 fin
+051 
+052 para agujatiempomin :min
+053 inversolapiz
+054 pongrosor [2 2]
+055 ponrumbo :min*6
+056 bajalapiz
+057 avanza 100
+058 subelapiz
+059 retrocede 100
+060 fin
+061 
+062 para agujatiemposeg :seg
+063 inversolapiz
+064 pongrosor [1 1]
+065 ponrumbo :seg*6
+066 bajalapiz
+067 avanza 100
+068 subelapiz
+069 retrocede 100
+070 fin
+071 
+072 para BorrarVentana
+073 borraventana "TIPOCONTROL
+074 fin
+075 
+076 para CargarSimulador
+077 ;Procedimiento que da de alta un nuevo simulador y procede a la carga del mismo
+078 ;Se pide al usuario que introduzca el nombre del simulador y se almacena en el fichero
+079 ;que contiene el nombre de los simuladores SIMULADORES.txt
+080 ;DESTACAR QUE EL NOMBRE DEL SIMULADOR DEBE COINCIDIR CON EL
+081 ;NOMBRE DEL ARCHIVO CON EXTENSIÓN .LGO PRINCIPAL DEL SIMULADOR
+082 ;A CARGAR
+083 HAZ "simul PRIMERO preguntabox [Dar de alta un simulador] [Introduzca el nombre del simulador:]
+084 ;Se almacena en el fichero de los nombres de simuladores el nuevo nombre del simulador a dar de alta
+085 abreañadir "ENTORNO/SIMULADORES/SIMULADORES.txt
+086 ponescritura "ENTORNO/SIMULADORES/SIMULADORES.txt
+087 ESCRIBE :simul
+088 ponescritura []
+089 cierra "ENTORNO/SIMULADORES/SIMULADORES.txt
+090 ;Se solicita al usuario la ruta donde está el fichero del simulador que se va a dar de alta
+091 HAZ "ruta preguntabox [Dar de alta un simulador] [Introduzca la ruta del simulador:]
+092 ;En :rutaSimulador se guarda la ruta en la que se quiere copiar el simulador (donde está
+093 ;instalado MSWLogo)
+094 HAZ "rutaSimulador (PALABRA :rutaMSWLogo "/ENTORNO/SIMULADORES/ :simul)
+095 ;Se copia el directorio del simulador a dar de alta en la carpeta correspondiente al nuevo simulador
+096 ;donde se tenga instalado MSWLogo
+097 COPIADIRECTORIO :ruta :rutaSimulador
+098 CAMBIADIRECTORIO :rutaSimulador
+099 BT
+0100 HAZ "FichSimul PALABRA :simul ".LGO
+0101 CARGA :FichSimul
+0102 ;Se retorna al directorio donde se ha instalado el compilador de MSWLogo
+0103 CAMBIADIRECTORIO :rutaMSWLogo
+0104 BT
+0105 fin
+0106 
+0107 para conseguirtiempo
+0108 haz "tiempo hora
+0109 haz "tiempo menosprimero :tiempo
+0110 haz "tiempo menosprimero :tiempo
+0111 haz "tiempo menosprimero :tiempo
+0112 haz "tiempo primero :tiempo
+0113 haz "tiempo analiza mezcla "oo :tiempo
+0114 devuelve :tiempo
+0115 fin
+0116 
+0117 para cuadro
+0118 av 100
+0119 fin
+0120 
+0121 para dibujareloj
+0122 ponrumbo 30
+0123 subelapiz
+0124 repite 12 ~
+0125 [~
+0126 avanza 120 ~
+0127 ponx coorx-12 ~
+0128 pony coory+12 ~
+0129 haz "sh rumbo
+0130 ponrumbo 90
+0131 rotula cuentarepite ~
+0132 ponrumbo :sh
+0133 ponx coorx+12 ~
+0134 pony coory-12 ~
+0135 retrocede 120 ~
+0136 giraderecha 30 ~
+0137 ]
+0138 fin
+0139 
+0140 para EleccionControladora
+0141 ;******** VENTANA DE ELECCION DEL TIPO DE CONTROLADORA ********
+0142 BT 	;borra pantalla de texto
+0143 BP 	;borra pantalla de gráficos
+0144 ocultatortuga
+0145 creaventana "principal "TIPOCONTROL [Elección de controladora] 120 150 287 100 []
+0146 creagroupbox "TIPOCONTROL "E_Ventana 5 0 274 85
+0147 creagroupbox "TIPOCONTROL "E_CNICE 20 2 120 50
+0148 creaboton "TIPOCONTROL "CNICE [ CNICE] 25 10 110 35 [BorrarVentana carga "ENTORNO/PRIMITIVAS/CNICE/Elecc_EntornoCNICE.LGO]
+0149 creaestatico "TIPOCONTROL "investronica [(compatible con Investrónica)] 32 31 100 10
+0150 creagroupbox "TIPOCONTROL "E_ENCONOR 145 2 120 50
+0151 creaboton "TIPOCONTROL "ENCONOR [ENCONOR PLUS] 150 10 110 35 [BorrarVentana carga "ENTORNO/PRIMITIVAS/ENCONOR/Elecc_EntornoENCONOR.LGO]
+0152 creaboton "TIPOCONTROL "Cancelar [CANCELAR] 105 60 75 20 [BT BP muestratortuga BorrarVentana]
+0153 fin
+0154 
+0155 para EleccionSimulador
+0156 ;******** VENTANA DE ELECCION DEL SIMULADOR ********
+0157 ;Se leen los nombres de los simuladores del archivo SIMULADORES.txt y se encolan en la variable :simuladores
+0158 SI ficherop "ENTORNO/SIMULADORES/SIMULADORES.txt [abrelectura "ENTORNO/SIMULADORES/SIMULADORES.txt
+0159 ponlectura "ENTORNO/SIMULADORES/SIMULADORES.txt
+0160 HAZ "simuladores []
+0161 HAZ "cont 0
+0162 mientras [NO finlec?] [HAZ "cont :cont+1 COLA "simuladores leelista]
+0163 ponlectura []
+0164 cierra "ENTORNO/SIMULADORES/SIMULADORES.txt
+0165 ]
+0166 HAZ "seleccion3 seleccionbox [Elija un simulador] :simuladores
+0167 DESDE [i 1 :cont] [HAZ "simulador PRIMERO DECOLA "simuladores
+0168 ;Se ve la selección que ha realizado el usuario y se procede a la carga del simulador correspondiente
+0169 SI :seleccion3 = :i [HAZ "rutSimul (PALABRA "ENTORNO/SIMULADORES/ :simulador "/ :simulador ".LGO)
+0170 carga :rutSimul
+0171 ]
+0172 ]
+0173 fin
+0174 
+0175 para EleccionTrabSimuladores
+0176 ;Ventana para elegir trabajar con simuladores o cargar un simulador propio
+0177 ;La variable rutaMSWLogo almacena la ruta donde se ha instalado el compilador de MSWLogo
+0178 HAZ "rutaMSWLogo DIRECTORIOACTUAL
+0179 BT
+0180 hazlocal "seleccion2 seleccionbox [Trabajar con simuladores] [[Usar un simulador] [Dar de alta un simulador]]
+0181 si :seleccion2 = 1 [EleccionSimulador]
+0182 si :seleccion2 = 2 [CargarSimulador]
+0183 fin
+0184 
+0185 para Empezar
+0186 ;************* VENTANA INICIAL ************
+0187 ;Ventana para elección de controladora, simuladores o programar con MSWLogo
+0188 tapa [[EleccionControladora EleccionTrabSimuladores CopiarFichero CargarSimulador EleccionSimulador Empezar BorrarVentana] [arranque simuladores simulador seleccion seleccion3 rutamswlogo rutsimul cont FichSimul ruta rutaSimulador simul] []]
+0189 haz "seleccion seleccionbox [Elija la opción de trabajo] [[Usar una controladora] [Simuladores] [Programar]]
+0190 si :seleccion = 1 [EleccionControladora]
+0191 si :seleccion = 2 [EleccionTrabSimuladores]
+0192 si :seleccion = 3 []
+0193 fin
+0194 
+0195 para oo :a
+0196 sisino iguales? ": :a [devuelve caracter 32] [devuelve :a]
+0197 fin
+0198 
+0199 para reloj
+0200 borrapantalla
+0201 ocultatortuga
+0202 dibujareloj
+0203 haz "seg 0
+0204 haz "min 0
+0205 haz "horas 0
+0206 agujatiempohoras :horas
+0207 agujatiempomin :min
+0208 agujatiemposeg :seg
+0209 poncontador 1 1000 [actualizar]
+0210 fin
+0211 
+0212 para zzz
+0213 sisino sinobox [Bienvenido] [Seleccione SI para ver el ejemplo. Seleccione NO para ver el código.] [aaa] [editatodo]
+0214 fin
+0215 
+0216 Haz "arranque [zzz]

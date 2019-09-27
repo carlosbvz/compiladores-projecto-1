@@ -2,8 +2,9 @@ package compiler;
 
 import java.util.stream.Stream;
 
-public class HugoCompiler {
+public class HugoCompiler { 
 
+    private String path = "C:\\Program Files (x86)\\MSWLogo\\bc5\\logo32.exe";
 
     public void compile(String fileName, Stream<String> fileStream, HugoLexicalAnalyzer lexicalAnalyzer, HugoFilesGenerator hugoFilesGenerator) throws Exception {
          
@@ -13,6 +14,8 @@ public class HugoCompiler {
             // Generate Error logs
 
             hugoFilesGenerator.print(fileName, fileStreamLexicallyAnalyzed);
+
+            Process process = new ProcessBuilder(path,"-l", "./cuadro.lgo").start();
 
             
     }
