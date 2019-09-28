@@ -21,7 +21,7 @@ public class HUGO {
             try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
                 hugoCompiler.compile(fileName, stream, hugoLexicalAnalyzer, hugoErrorFileGenerator);
             } catch (Exception e) {
-                System.out.println("Hubo un error con el archivo de entrada.");
+                System.out.println("Hubo un error procesando el archivo de entrada.");
             }
         }
     }
