@@ -1,0 +1,6 @@
+; Primer ejemplo en HUGO
+PARA Cuadrado
+BP
+MT
+REPITE 4 [ AV 100 GD 90 OT
+FIN
