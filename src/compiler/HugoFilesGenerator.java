@@ -24,7 +24,7 @@ public class HugoFilesGenerator {
 
         final String logoFileName = fileName.substring(0, fileName.lastIndexOf('.')) + ".lgo";
         final File logoFile = new File("./", logoFileName);
-        BufferedWriter logoWriter = new BufferedWriter(new FileWriter(errorFile));
+        BufferedWriter logoWriter = new BufferedWriter(new FileWriter(logoFile));
         
         stream.forEach(s -> {
             try {
