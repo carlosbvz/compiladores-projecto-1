@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-public class HugoErrorFileGenerator {
+public class HugoFilesGenerator {
 
     private Integer count = 0;
 
@@ -19,18 +19,28 @@ public class HugoErrorFileGenerator {
 
     void print(String fileName, Stream<String> stream) throws IOException {
         final String errorFileName = fileName.substring(0, fileName.lastIndexOf('.')) + "-HUGO-errores.txt";
-        final File file = new File("./", errorFileName);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        final File errorFile = new File("./", errorFileName);
+        BufferedWriter errorWriter = new BufferedWriter(new FileWriter(errorFile));
+
+        final String logoFileName = fileName.substring(0, fileName.lastIndexOf('.')) + ".lgo";
+        final File logoFile = new File("./", logoFileName);
+        BufferedWriter logoWriter = new BufferedWriter(new FileWriter(errorFile));
         
         stream.forEach(s -> {
             try {
-                writer.write(getCounterLine(++count) + " " + s+ "\n");
+                String errorLine = new String(getCounterLine(++count) + " " + s+ "\n");
+                errorWriter.write(errorLine);
+                logoWriter.write(s+ "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-        writer.close();
-        file.createNewFile();
+
+        
+        errorWriter.close();
+        errorFile.createNewFile();
+        logoWriter.close();
+        logoFile.createNewFile();
     }
 
 }

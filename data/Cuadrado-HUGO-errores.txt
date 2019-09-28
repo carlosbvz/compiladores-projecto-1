@@ -1,6 +1,8 @@
-001 ; Primer ejemplo en HUGO
-002 PARA Cuadrado
-003 BP
-004 MT
-005 REPITE 4 [ AV 100 GD 90 OT
+; Primer ejemplo en HUGO
+PARA Cuadrado
+BP
+MT
+REPITE 4 [ AV 100 GD 90 OT
+FIN
+AV 100 GD 90 OT
 006 FIN
