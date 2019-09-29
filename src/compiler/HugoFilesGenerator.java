@@ -28,9 +28,9 @@ public class HugoFilesGenerator {
         
         stream.forEach(s -> {
             try {
-                String errorLine = new String(getCounterLine(++count) + " " + s+ "\n");
+                String errorLine = new String(getCounterLine(++count) + " " + s + System.lineSeparator());
                 errorWriter.write(errorLine);
-                logoWriter.write(s+ "\n");
+                logoWriter.write(s +  System.lineSeparator());
             } catch (IOException e) {
                 e.printStackTrace();
             }

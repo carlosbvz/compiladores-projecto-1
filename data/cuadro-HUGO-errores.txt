@@ -1,0 +1,10 @@
+001 para cuadro
+002 bt
+003 mt
+004 repite 4[av 100 gd 90]
+005 ot
+006 espera 60
+007 adios
+008 fin
+009 
+010 Ejecuta cuadro
