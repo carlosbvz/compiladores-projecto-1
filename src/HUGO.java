@@ -13,6 +13,7 @@ public class HUGO {
     private static HugoLexicalAnalyzer hugoLexicalAnalyzer = new HugoLexicalAnalyzer();
     private static HugoFilesGenerator hugoFilesGenerator = new HugoFilesGenerator();
     private static LogoRunner logoRunner = new LogoRunner();
+    private static Boolean shouldRunLogo = false;
     
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
@@ -22,7 +23,7 @@ public class HUGO {
             fileName = args[0];
             try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
                 hugoCompiler.compile(fileName, stream, hugoLexicalAnalyzer, hugoFilesGenerator);
-                logoRunner.run(fileName);
+                if (shouldRunLogo) logoRunner.run(fileName);
             } catch (Exception e) {
                 System.out.println("Hubo un error procesando el archivo de entrada.");
             }
