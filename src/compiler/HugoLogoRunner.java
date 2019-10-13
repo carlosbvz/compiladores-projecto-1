@@ -10,7 +10,7 @@ public class HugoLogoRunner {
     public void run(String fileName) throws IOException {
         File file = new File("");
         String filePath = file.getAbsolutePath();
-        Process process = new ProcessBuilder(logoProcess,"-l", "C:\\Users\\evely_000\\Documents\\compiladores\\compiladores-projecto-1\\data\\cuadro.lgo").start();
+        Process process = new ProcessBuilder(logoProcess,"-l", ".\\cuadro.lgo").start();
     }
 }
 
