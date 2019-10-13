@@ -5,26 +5,37 @@ import java.util.ArrayList;
 
 public class HugoLexicalAnalyzer {
 
-    private ArrayList<String[]> setTokensArray(Stream<String> streamCleanedSpaced) {
+    private ArrayList<String[]> getTokensListArray(Stream<String> streamCleanedSpaced) {
 
-        ArrayList<String[]> tokensArray = new ArrayList<String[]>();//creating new generic arraylist
+        ArrayList<String[]> tokensListArray = new ArrayList<String[]>();
 
+        /**
+         * Removes empty lines
+         * Removes comments
+         * Standarizes to Lowercase
+         * Creates set of tokens
+         */
         streamCleanedSpaced.forEach((lineOfCode) -> {
-            String[] tokens = lineOfCode.split("\\s");
-            tokensArray.add(tokens);
+            if(lineOfCode != null && !lineOfCode.isEmpty()) {
+                String lineOfCodeWithNoComments = lineOfCode.split(";")[0];
+                if(lineOfCodeWithNoComments != null && !lineOfCodeWithNoComments.isEmpty()) {
+                    String[] tokens = lineOfCodeWithNoComments.toLowerCase().split("\\s");
+                    tokensListArray.add(tokens);
+                }
+            }
          });
 
-         return tokensArray;
+         return tokensListArray;
     }
 
     public ArrayList<String[]> analyze(Stream<String> fileStream) {
 
         // Clearing white spaces
         Stream<String> streamCleanedSpaced = fileStream.map(s -> s.trim().replaceAll(" +", " "));
-        // Create tokens
-        ArrayList<String[]> tokensArray = setTokensArray(streamCleanedSpaced);
+        // Create clean tokens
+        ArrayList<String[]> tokensListArray = getTokensListArray(streamCleanedSpaced);
 
-        return tokensArray;
+        return tokensListArray;
     }
 
 }

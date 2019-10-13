@@ -1,5 +1,10 @@
-para cuadro
-ad 50
+Para cuadro
+
+
+
+
+; This is a comment :P
+ad 50 ; this line has a comment too
 ad 50
 bt
 mt

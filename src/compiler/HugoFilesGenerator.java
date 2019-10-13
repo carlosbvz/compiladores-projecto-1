@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.stream.Stream;
+import java.util.ArrayList;
 
 public class HugoFilesGenerator {
 
@@ -17,7 +17,7 @@ public class HugoFilesGenerator {
         else return count.toString();
     }
 
-    void print(String fileName, Stream<String> stream) throws IOException {
+    void print(String fileName, ArrayList<String[]> stream) throws IOException {
         final String errorFileName = fileName.substring(0, fileName.lastIndexOf('.')) + "-HUGO-errores.txt";
         final File errorFile = new File("./", errorFileName);
         BufferedWriter errorWriter = new BufferedWriter(new FileWriter(errorFile));
