@@ -36,7 +36,6 @@ public class HugoCompiler {
             ArrayList<String> errorLogs = hugoSyntaxAnalyzer.analyze(tokensArrayLexicallyAnalyzed);
 
             if (areThereErrorLogs(errorLogs)) {
-                // TODO: Print Error file
                 // TODO: Fix how this is printing the files
                 System.out.println("Hay errores en el código fuente");
 
