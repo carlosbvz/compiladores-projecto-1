@@ -1,0 +1,1 @@
+ERROR 000: El código fuente no contiene palabras reservadas 'para' ni 'fin'.

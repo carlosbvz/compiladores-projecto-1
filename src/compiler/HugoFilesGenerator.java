@@ -39,8 +39,11 @@ public class HugoFilesGenerator {
         final File errorFile = new File("./", errorFileName);
         BufferedWriter errorWriter = new BufferedWriter(new FileWriter(errorFile));
 
+        if (tokensArrayLexicallyAnalyzed.size() == 0) errorWriter.write(errorLogs.get(0));
+        
         for (int index = 0; index < tokensArrayLexicallyAnalyzed.size(); index++) {
             String joinedString = String.join(" ", tokensArrayLexicallyAnalyzed.get(index));
+            System.out.println(tokensArrayLexicallyAnalyzed.size());
             try {
                 String codeLine = new String(getCounterLine(++count) + " " + joinedString + System.lineSeparator());
                 String errorLine = errorLogs.get(index);
@@ -54,18 +57,6 @@ public class HugoFilesGenerator {
                 e.printStackTrace();
             }
         }
-        
-        // errorLogs.forEach(lineOfCodeArray -> {
-        //     String joinedString = String.join(" ", lineOfCodeArray);
-        //     try {
-        //         String errorLine = new String(getCounterLine(++count) + " " + joinedString + System.lineSeparator());
-        //         errorWriter.write(errorLine);
-                
-        //     } catch (IOException e) {
-        //         e.printStackTrace();
-        //     }
-        // });
-
         
         errorWriter.close();
         errorFile.createNewFile();

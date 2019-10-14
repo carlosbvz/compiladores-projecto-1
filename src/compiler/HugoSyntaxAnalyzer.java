@@ -270,6 +270,7 @@ public class HugoSyntaxAnalyzer {
         ArrayList<String> errorsListArray = new ArrayList<String>();
         // Checks for basic general structure 'para/fin' tokens words present in code
         String generalStructureErrorMessage = analyzeTokensGeneralStructure(tokensArrayLexicallyAnalyzed);
+
         if (generalStructureErrorMessage != null)
             errorsListArray.add(generalStructureErrorMessage);
 
@@ -278,7 +279,7 @@ public class HugoSyntaxAnalyzer {
         if (basicErrors != null)
             errorsListArray.addAll(basicErrors);
 
-        // System.out.println(Arrays.asList(hugoVariablesHashMap));
+        // System.out.println(Arrays.asList(errorsListArray));
 
         return errorsListArray;
 

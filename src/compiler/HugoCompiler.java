@@ -46,8 +46,8 @@ public class HugoCompiler {
             //     System.out.print("Linea de error => ");
             //     System.out.println(error);
             // });
+            hugoFilesGenerator.printErrorsFile(fileName, errorLogs, tokensArrayLexicallyAnalyzed);
             if (areThereErrorOnLogs(errorLogs)) {
-                hugoFilesGenerator.printErrorsFile(fileName, errorLogs, tokensArrayLexicallyAnalyzed);
                 System.out.println("Error de Compilación. Por favor revise el archivo de errores para más información.");
             } else {
                 hugoFilesGenerator.printLogoFile(fileName, tokensArrayLexicallyAnalyzed);
