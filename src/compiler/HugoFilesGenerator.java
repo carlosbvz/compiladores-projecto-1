@@ -40,10 +40,9 @@ public class HugoFilesGenerator {
         BufferedWriter errorWriter = new BufferedWriter(new FileWriter(errorFile));
 
         if (tokensArrayLexicallyAnalyzed.size() == 0) errorWriter.write(errorLogs.get(0));
-        
+
         for (int index = 0; index < tokensArrayLexicallyAnalyzed.size(); index++) {
             String joinedString = String.join(" ", tokensArrayLexicallyAnalyzed.get(index));
-            System.out.println(tokensArrayLexicallyAnalyzed.size());
             try {
                 String codeLine = new String(getCounterLine(++count) + " " + joinedString + System.lineSeparator());
                 String errorLine = errorLogs.get(index);
