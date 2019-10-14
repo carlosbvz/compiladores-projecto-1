@@ -1,14 +1,20 @@
 package compiler;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 public class HugoCompiler {
-    
-    private Boolean areThereErrorLogs(ArrayList<String> errorLogs) {
-        // !nullsOnly
-        return !errorLogs.stream().noneMatch(Objects::nonNull);
+
+    private Boolean areThereErrorOnLogs(ArrayList<String> errorLogs) {
+
+        for (int index = 0; index < errorLogs.size(); index++) {
+            String lineOfCode = errorLogs.get(index);
+            String joinedString = String.join("", lineOfCode);
+            if (joinedString.contains("ERROR")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void compile(String fileName, 
@@ -35,19 +41,17 @@ public class HugoCompiler {
              */
             ArrayList<String> errorLogs = hugoSyntaxAnalyzer.analyze(tokensArrayLexicallyAnalyzed);
 
-            if (areThereErrorLogs(errorLogs)) {
-                // TODO: Fix how this is printing the files
-                System.out.println("Hay errores en el código fuente");
-
-                // Logging errors
-                errorLogs.forEach(error -> {
-                    System.out.println(error);
-                });
-                hugoFilesGenerator.print(fileName, tokensArrayLexicallyAnalyzed);
+            // Logging errors
+            // errorLogs.forEach(error -> {
+            //     System.out.print("Linea de error => ");
+            //     System.out.println(error);
+            // });
+            if (areThereErrorOnLogs(errorLogs)) {
+                hugoFilesGenerator.printErrorsFile(fileName, errorLogs, tokensArrayLexicallyAnalyzed);
+                System.out.println("Error de Compilación. Por favor revise el archivo de errores para más información.");
             } else {
-                // TODO: print logo file
-                // Runs Logo 
-                System.out.println("No hay errores en el código fuente");
+                hugoFilesGenerator.printLogoFile(fileName, tokensArrayLexicallyAnalyzed);
+                System.out.println("Compilación exitosa");
                 if (shouldRunLogo) logoRunner.run(fileName);
             }
     }

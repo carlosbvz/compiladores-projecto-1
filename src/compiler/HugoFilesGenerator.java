@@ -17,30 +17,59 @@ public class HugoFilesGenerator {
         else return count.toString();
     }
 
-    void print(String fileName, ArrayList<String[]> stream) throws IOException {
-        final String errorFileName = fileName.substring(0, fileName.lastIndexOf('.')) + "-HUGO-errores.txt";
-        final File errorFile = new File("./", errorFileName);
-        BufferedWriter errorWriter = new BufferedWriter(new FileWriter(errorFile));
-
+    public void printLogoFile(String fileName, ArrayList<String[]> tokensArrayLexicallyAnalyzed) throws IOException {
         final String logoFileName = fileName.substring(0, fileName.lastIndexOf('.')) + ".lgo";
         final File logoFile = new File("./", logoFileName);
         BufferedWriter logoWriter = new BufferedWriter(new FileWriter(logoFile));
-        
-        stream.forEach(s -> {
+
+        tokensArrayLexicallyAnalyzed.forEach(lineOfCodeArray -> {
+            String joinedString = String.join(" ", lineOfCodeArray);
             try {
-                String errorLine = new String(getCounterLine(++count) + " " + s + System.lineSeparator());
-                errorWriter.write(errorLine);
-                logoWriter.write(s +  System.lineSeparator());
+                logoWriter.write(joinedString + System.lineSeparator());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+        logoWriter.close();
+        logoFile.createNewFile();
+    }
+
+    void printErrorsFile(String fileName, ArrayList<String> errorLogs, ArrayList<String[]> tokensArrayLexicallyAnalyzed) throws IOException {
+        final String errorFileName = fileName.substring(0, fileName.lastIndexOf('.')) + "-HUGO-errores.txt";
+        final File errorFile = new File("./", errorFileName);
+        BufferedWriter errorWriter = new BufferedWriter(new FileWriter(errorFile));
+
+        for (int index = 0; index < tokensArrayLexicallyAnalyzed.size(); index++) {
+            String joinedString = String.join(" ", tokensArrayLexicallyAnalyzed.get(index));
+            try {
+                String codeLine = new String(getCounterLine(++count) + " " + joinedString + System.lineSeparator());
+                String errorLine = errorLogs.get(index);
+                if (errorLine != null) {
+                    codeLine += "\t"+errorLogs.get(index);
+                    codeLine += System.lineSeparator();
+                }
+                errorWriter.write(codeLine);
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        // errorLogs.forEach(lineOfCodeArray -> {
+        //     String joinedString = String.join(" ", lineOfCodeArray);
+        //     try {
+        //         String errorLine = new String(getCounterLine(++count) + " " + joinedString + System.lineSeparator());
+        //         errorWriter.write(errorLine);
+                
+        //     } catch (IOException e) {
+        //         e.printStackTrace();
+        //     }
+        // });
 
         
         errorWriter.close();
         errorFile.createNewFile();
-        logoWriter.close();
-        logoFile.createNewFile();
+        
     }
 
 }

@@ -1,12 +1,13 @@
-[Ljava.lang.String;@5fd0d5ae
-[Ljava.lang.String;@2d98a335
-[Ljava.lang.String;@16b98e56
-[Ljava.lang.String;@7ef20235
-[Ljava.lang.String;@27d6c5e0
-[Ljava.lang.String;@4f3f5b24
-[Ljava.lang.String;@15aeb7ab
-[Ljava.lang.String;@7b23ec81
-[Ljava.lang.String;@6acbcfc0
-[Ljava.lang.String;@5f184fc6
-[Ljava.lang.String;@3feba861
-[Ljava.lang.String;@5b480cf9
+para cuadro
+av
+av 50
+av 50
+av 50
+bt
+mt
+repite 4[av 100 gd 90]
+ot
+espera 60
+adios
+fin
+ejecuta cuadro
