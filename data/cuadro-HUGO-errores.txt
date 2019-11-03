@@ -1,5 +1,11 @@
-001 para pruebatarea2
-	ERROR 000: El código fuente no contiene palabra reservada 'fin'.
-002 %
-003 fini
-	ERROR 100: Comando desconocido "%".
+001 para hexa
+002 bp
+003 poncp 12
+	Advertencia: Instrucción "poncp" no es soportada por esta versión.
+004 poncl 8
+005 pong [3 3]
+	Advertencia: Instrucción "pong" no es soportada por esta versión.
+006 repite 62[av 120]
+007 bajalapiz
+008 ot
+009 fin

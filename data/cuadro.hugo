@@ -1,13 +1,9 @@
-
-
-   
-    ; prueba de comentarios :-)
-
-
-    PARA    PRUEBATAREA2
-
-
-%;
-
-    FINI
-
+para hexa
+bp
+poncp 12
+poncl 8
+pong [3 3]
+repite 62[av 120]
+BAJALAPIZ
+ot
+fin

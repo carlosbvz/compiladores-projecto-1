@@ -1,17 +1,16 @@
 package compiler;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class HugoSyntaxAnalyzer {
 
     private static String[] hugoReservedWords = { "av", "avanza", "re", "retrocede", "gd", "giraderecha", "gi",
-            "giraizquierda", "para", "fin", "haz", "bp", "borrapantalla", "sl", "subelapiz", "bl", "bajalapiz",
-            "goma", "centro", "lapiznormal", "ponlapiz", "ot", "ocultatortuga", "mt", "muestratortuga", "poncl",
-            "poncolorlapiz", "poncolorrelleno", "rellena", "repite"};
+            "giraizquierda", "para", "fin", "haz", "bp", "borrapantalla", "sl", "subelapiz", "bl", "bajalapiz", "goma",
+            "centro", "lapiznormal", "ponlapiz", "ot", "ocultatortuga", "mt", "muestratortuga", "poncl",
+            "poncolorlapiz", "poncolorrelleno", "rellena", "repite" };
 
-            
     private static String[] logoReservedWords = { "abiertos", "abre", "abreactualizar", "abredialogo", "abremidi",
             "abrepuerto", "ac", "activa", "activaventana", "actualizaboton", "actualizaestatico", "adios", "ajusta",
             "alto", "analiza", "anterior", "antes", "aplica", "arccos", "arcodeelipse", "arcsen", "arctan",
@@ -99,11 +98,13 @@ public class HugoSyntaxAnalyzer {
         hugoSymbolHashMapTable.put("centro", "Empty");
         hugoSymbolHashMapTable.put("repite", "Function");
     }
+
     private void saveVariable(String[] lineOfCodeArray) {
         String key = lineOfCodeArray[1].substring(1);
         String value = lineOfCodeArray[2];
         hugoVariablesHashMap.put(key, value);
     }
+
     // Error Messages
     private String getNotSupportedTokenErrorMessage(String token) {
         return "Advertencia: Instrucción \"" + token + "\" no es soportada por esta versión.";
@@ -113,13 +114,16 @@ public class HugoSyntaxAnalyzer {
         return "ERROR 100: Comando desconocido \"" + token + "\".";
     }
 
-    private String getInvalidTypeErrorMessage(String tokenArgument, String tokenCommand) {
+    private String getInvalidArgumentTypeErrorMessage(String tokenArgument, String tokenCommand) {
         return "ERROR 200: Tipo de dato inválido \"" + tokenArgument + "\" para el comando \"" + tokenCommand + "\".";
     }
 
+    private String getInvalidArgumentStructureErrorMessage(String tokenArgumenString, String tokenCommand) {
+        return "ERROR 300: Argumento inválido \"" + tokenArgumenString + "\" para el comando  \"" + tokenCommand + "\".";
+    }
+
     private String getInvalidAmountArguments(Integer argumentsNumber, String tokenCommand) {
-        return "ERROR 300: Cantidad inválida de argumentos (" + argumentsNumber + ") para el comando \"" + tokenCommand
-                + "\".";
+        return "ERROR 400: Cantidad inválida de argumentos (" + argumentsNumber + ") para el comando \"" + tokenCommand + "\".";
     }
 
     private Boolean isTokenHugoWord(String token) {
@@ -144,7 +148,7 @@ public class HugoSyntaxAnalyzer {
         return isTokenLogoWord;
     }
 
-    private Boolean isTokenAnInteger(String token) {
+    private Boolean isInteger(String token) {
         try {
             Integer.parseInt(token);
             return true;
@@ -165,40 +169,94 @@ public class HugoSyntaxAnalyzer {
         return (token.charAt(0) == '"');
     }
 
-    private Boolean isTokenValidArgument(String token, String commandToken, Integer tokenIndex) {
+    private Boolean hasValidNumberOfArguments(String commandToken, String arguments) {
+        Integer argumentsCount = arguments.split(" ").length;
+        if (commandToken.equals("repite")) {
+            if (argumentsCount >= 2 ) return true;
+        } else if (commandToken.equals("haz")) {
+            if (argumentsCount == 2) return true;
+        }
+        else if (argumentsCount == 1) return true;
+
+        return false;
+    }
+
+    private Boolean hasValidArgumentType(String commandToken, String arguments) {
+
         Boolean isValidTokenType = false;
 
-        if (isSettingVariable(commandToken)) {
-            if (tokenIndex == 1 && isTokenDeclaringVariable(token)) isValidTokenType = true;
-            else if (tokenIndex == 2) {
-                if (isTokenDeclaringVariable(token) || isTokenVariable(token)) isValidTokenType = true;
-            }
-        } else {
+        try {
             String tokenType = hugoSymbolHashMapTable.get(commandToken);
-            Boolean isTokenAnInteger = isTokenAnInteger(token);
+            Boolean isInteger = isInteger(arguments);
+            Boolean isEmpty = arguments.isEmpty();
 
             switch (tokenType) {
-            case "String":
-                if (!isTokenAnInteger)
+                case "String":
+                    if (!isInteger)
+                        isValidTokenType = true;
+                    break;
+                case "Integer":
+                    if (isInteger)
+                        isValidTokenType = true;
+                    break;
+                case "Empty":
+                    if (isEmpty) isValidTokenType = true;
+                    break;
+                case "Function":
                     isValidTokenType = true;
-                break;
-            case "Integer":
-                if (isTokenAnInteger)
-                    isValidTokenType = true;
-                break;
-            default:
-                isValidTokenType = false;
-            }
+                    break;
+                default:
+                    isValidTokenType = false;
+                }
+        } catch (Exception e) {
+            System.out.println(arguments);
+            System.out.println(e);
         }
         return isValidTokenType;
     }
 
+    private Boolean hasValidArgumentStructure(String commandToken, String arguments) {
+        if (commandToken.equals("repite")) {
+
+            String[] repiteClosingTestingArray = arguments.split("]");
+            // Invalid if there are more data after the ']'
+            if (repiteClosingTestingArray.length > 1) return false;
+            
+            String[] repiteStructure = repiteClosingTestingArray[0].split("\\[");
+            // Checks if there are more data before the '[' than the 'repite' loop counter
+            if (repiteStructure.length != 2) return false;
+
+            String repiteQuantity = repiteStructure[0];
+            String repiteArguments = repiteStructure[1];
+
+            // Checks if loop counter is not an integer
+            if (!isInteger(repiteQuantity)) return false;
+
+            /** TODO: repiteArguments needs to be tested here... 
+             *  Not an easy task since it might content
+             *  n amount of arguments...
+            */
+
+            return true;
+        } else if (commandToken.equals("haz")) {
+
+            /** TODO: I need to handle the variables declarations here...
+             * 
+             */
+            return true;
+        }
+        return true;
+    }
+    // Checks if Code Structure
     private String analyzeTokensGeneralStructure(ArrayList<String[]> tokensArrayLexicallyAnalyzed) {
 
         String openWord = "para";
         String closingWord = "fin";
         Boolean hasOpenWord = false;
         Boolean hasClosingWord = false;
+
+        String firstToken = tokensArrayLexicallyAnalyzed.get(0)[0];
+        String lastToken = tokensArrayLexicallyAnalyzed.get(tokensArrayLexicallyAnalyzed.size() - 1)[0];
 
         for (int lineIndex = 0; lineIndex < tokensArrayLexicallyAnalyzed.size(); lineIndex++) {
             for (int tokenIndex = 0; tokenIndex < tokensArrayLexicallyAnalyzed.get(lineIndex).length; tokenIndex++) {
@@ -216,6 +274,8 @@ public class HugoSyntaxAnalyzer {
             return "ERROR 000: El código fuente no contiene palabra reservada 'para'.";
         else if (!hasClosingWord)
             return "ERROR 000: El código fuente no contiene palabra reservada 'fin'.";
+        else if (!firstToken.equals(openWord) || !lastToken.equals(closingWord))
+            return "ERROR 000: El código fuente debe iniciar con la palabra 'para' y terminar con la palabra 'fin'.";
         return null;
     }
 
@@ -227,66 +287,27 @@ public class HugoSyntaxAnalyzer {
         for (int lineIndex = 0; lineIndex < tokensArrayLexicallyAnalyzed.size(); lineIndex++) {
 
             String lineErrorMessage = null;
-            Boolean shouldIgnoreRestOfLine = false;
             String[] lineOfCodeArray = tokensArrayLexicallyAnalyzed.get(lineIndex);
             String commandToken = lineOfCodeArray[0];
+            String arguments = String.join(" ",Arrays.copyOfRange(lineOfCodeArray, 1, lineOfCodeArray.length));
             Boolean isHugoWord = isTokenHugoWord(commandToken);
             Boolean isLogoWord = isTokenLogoWord(commandToken);
-            Integer argumentsPerCommand = lineOfCodeArray.length - 1;
-            Boolean isSettingVariable = isSettingVariable(commandToken);
 
-            if (!isHugoWord && isLogoWord) { // Checks if commandToken is Logo reserved workd
+            // Checks if commandToken is Logo reserved workd
+            if (!isHugoWord && isLogoWord) {
                 lineErrorMessage = getNotSupportedTokenErrorMessage(commandToken);
-                shouldIgnoreRestOfLine = true;
-            } else if (!isHugoWord && !isLogoWord) { // Command token is a un-known word (no hugo, no logo)
+            // Checks Command token is a un-known word (no hugo, no logo)
+            } else if (!isHugoWord && !isLogoWord) {
                 lineErrorMessage = getUnKnownTokenErrorMessage(commandToken);
-                shouldIgnoreRestOfLine = true;
-            } else if (isSettingVariable) {
-                if (argumentsPerCommand != 2) {
-                    lineErrorMessage += getInvalidAmountArguments(argumentsPerCommand, commandToken);
-                }
-                shouldIgnoreRestOfLine = true;
+            // Checks if amount of arguments is right
+            } else if(!hasValidNumberOfArguments(commandToken, arguments)) {
+                lineErrorMessage = getInvalidAmountArguments(arguments.split(" ").length, commandToken);
+            // Checks if provided arguments have the right type
+            } else if(!hasValidArgumentType(commandToken, arguments)) {
+                lineErrorMessage = getInvalidArgumentTypeErrorMessage(arguments, commandToken);
+            } else if(!hasValidArgumentStructure(commandToken, arguments)) {
+                lineErrorMessage = getInvalidArgumentStructureErrorMessage(arguments, commandToken);
             }
-
-            // Check the rest of tokens in line of code, which basically are the command's
-            // arguments
-            if (!shouldIgnoreRestOfLine) {
-
-                if (commandToken.equals("repite")) {
-                    // Here we handle 'repite' since it is a very ... complex operation
-                    System.out.println("Repite");
-                } else {
-                    // Error if amount of arguments is not supported
-                    if (argumentsPerCommand > 1) {
-                        if (lineErrorMessage == null)
-                            lineErrorMessage = "";
-                        else
-                            lineErrorMessage += "/n";
-                        lineErrorMessage += getInvalidAmountArguments(argumentsPerCommand, commandToken);
-                    } else {
-                        for (int tokenIndex = 1; tokenIndex < tokensArrayLexicallyAnalyzed
-                                .get(lineIndex).length; tokenIndex++) {
-                            String token = lineOfCodeArray[tokenIndex];
-                            Boolean isTokenValidArgument = isTokenValidArgument(token, commandToken, tokenIndex);
-
-                            if (!isTokenValidArgument) {
-                                if (lineErrorMessage == null)
-                                    lineErrorMessage = "";
-                                else
-                                    lineErrorMessage += "/n";
-                                lineErrorMessage += getInvalidTypeErrorMessage(token, commandToken);
-                            }
-                        }
-                    }
-                }
-
-                
-            }
-
-            if (isSettingVariable && lineErrorMessage == null) {
-                saveVariable(lineOfCodeArray);
-            }
-            
             basicErrors.add(lineErrorMessage);
         }
 
