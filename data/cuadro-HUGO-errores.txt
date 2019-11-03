@@ -1,1 +1,5 @@
-ERROR 000: El código fuente no contiene palabras reservadas 'para' ni 'fin'.
+001 para pruebatarea2
+	ERROR 000: El código fuente no contiene palabra reservada 'fin'.
+002 %
+003 fini
+	ERROR 100: Comando desconocido "%".

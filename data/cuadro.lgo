@@ -1,0 +1,8 @@
+para hexa
+bp
+poncp 12
+poncl 8
+pong [3 3]
+repite 6 [av 120 gd 60]
+ot
+fin

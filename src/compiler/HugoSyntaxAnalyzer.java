@@ -1,13 +1,17 @@
 package compiler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.HashMap;
 
 public class HugoSyntaxAnalyzer {
 
     private static String[] hugoReservedWords = { "av", "avanza", "re", "retrocede", "gd", "giraderecha", "gi",
-            "giraizquierda", "para", "fin", "haz" };
+            "giraizquierda", "para", "fin", "haz", "bp", "borrapantalla", "sl", "subelapiz", "bl", "bajalapiz",
+            "goma", "centro", "lapiznormal", "ponlapiz", "ot", "ocultatortuga", "mt", "muestratortuga", "poncl",
+            "poncolorlapiz", "poncolorrelleno", "rellena", "repite"};
+
+            
     private static String[] logoReservedWords = { "abiertos", "abre", "abreactualizar", "abredialogo", "abremidi",
             "abrepuerto", "ac", "activa", "activaventana", "actualizaboton", "actualizaestatico", "adios", "ajusta",
             "alto", "analiza", "anterior", "antes", "aplica", "arccos", "arcodeelipse", "arcsen", "arctan",
@@ -75,6 +79,25 @@ public class HugoSyntaxAnalyzer {
         hugoSymbolHashMapTable.put("giraizquierda", "Integer");
         hugoSymbolHashMapTable.put("para", "String");
         hugoSymbolHashMapTable.put("fin", "Empty");
+        hugoSymbolHashMapTable.put("bp", "Empty");
+        hugoSymbolHashMapTable.put("borrapantalla", "Empty");
+        hugoSymbolHashMapTable.put("sl", "Empty");
+        hugoSymbolHashMapTable.put("subelapiz", "Empty");
+        hugoSymbolHashMapTable.put("bl", "Empty");
+        hugoSymbolHashMapTable.put("bajalapiz", "Empty");
+        hugoSymbolHashMapTable.put("goma", "Empty");
+        hugoSymbolHashMapTable.put("ot", "Empty");
+        hugoSymbolHashMapTable.put("ocultatortuga", "Empty");
+        hugoSymbolHashMapTable.put("mt", "Empty");
+        hugoSymbolHashMapTable.put("muestratortuga", "Empty");
+        hugoSymbolHashMapTable.put("lapiznormal", "Empty");
+        hugoSymbolHashMapTable.put("ponlapiz", "Empty");
+        hugoSymbolHashMapTable.put("poncl", "Integer");
+        hugoSymbolHashMapTable.put("poncolorlapiz", "Integer");
+        hugoSymbolHashMapTable.put("poncolorrelleno", "Integer");
+        hugoSymbolHashMapTable.put("rellena", "Empty");
+        hugoSymbolHashMapTable.put("centro", "Empty");
+        hugoSymbolHashMapTable.put("repite", "Function");
     }
     private void saveVariable(String[] lineOfCodeArray) {
         String key = lineOfCodeArray[1].substring(1);
@@ -229,28 +252,35 @@ public class HugoSyntaxAnalyzer {
             // arguments
             if (!shouldIgnoreRestOfLine) {
 
-                // Error if amount of arguments is not supported
-                if (argumentsPerCommand > 1) {
-                    if (lineErrorMessage == null)
-                        lineErrorMessage = "";
-                    else
-                        lineErrorMessage += "/n";
-                    lineErrorMessage += getInvalidAmountArguments(argumentsPerCommand, commandToken);
+                if (commandToken.equals("repite")) {
+                    // Here we handle 'repite' since it is a very ... complex operation
+                    System.out.println("Repite");
                 } else {
-                    for (int tokenIndex = 1; tokenIndex < tokensArrayLexicallyAnalyzed
-                            .get(lineIndex).length; tokenIndex++) {
-                        String token = lineOfCodeArray[tokenIndex];
-                        Boolean isTokenValidArgument = isTokenValidArgument(token, commandToken, tokenIndex);
+                    // Error if amount of arguments is not supported
+                    if (argumentsPerCommand > 1) {
+                        if (lineErrorMessage == null)
+                            lineErrorMessage = "";
+                        else
+                            lineErrorMessage += "/n";
+                        lineErrorMessage += getInvalidAmountArguments(argumentsPerCommand, commandToken);
+                    } else {
+                        for (int tokenIndex = 1; tokenIndex < tokensArrayLexicallyAnalyzed
+                                .get(lineIndex).length; tokenIndex++) {
+                            String token = lineOfCodeArray[tokenIndex];
+                            Boolean isTokenValidArgument = isTokenValidArgument(token, commandToken, tokenIndex);
 
-                        if (!isTokenValidArgument) {
-                            if (lineErrorMessage == null)
-                                lineErrorMessage = "";
-                            else
-                                lineErrorMessage += "/n";
-                            lineErrorMessage += getInvalidTypeErrorMessage(token, commandToken);
+                            if (!isTokenValidArgument) {
+                                if (lineErrorMessage == null)
+                                    lineErrorMessage = "";
+                                else
+                                    lineErrorMessage += "/n";
+                                lineErrorMessage += getInvalidTypeErrorMessage(token, commandToken);
+                            }
                         }
                     }
                 }
+
+                
             }
 
             if (isSettingVariable && lineErrorMessage == null) {

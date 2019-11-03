@@ -16,7 +16,7 @@ public class HUGO {
     private static HugoSyntaxAnalyzer hugoSyntaxAnalyzer = new HugoSyntaxAnalyzer();
     private static HugoFilesGenerator hugoFilesGenerator = new HugoFilesGenerator();
     private static HugoLogoRunner hugoLogoRunner = new HugoLogoRunner();
-    private static Boolean shouldRunLogo = true; // If set to 'false', forces the System from running the logo app
+    private static Boolean shouldRunLogo = false; // If set to 'false', forces the System from running the logo app
     
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
